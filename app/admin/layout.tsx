@@ -3,9 +3,13 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ReactNode } from "react"
+import { useAuth } from "@/hooks/use-auth"
+import { Button } from "@/components/ui/button"
+import { LogOut, User } from "lucide-react"
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
+  const { user, signOut } = useAuth()
 
   const linkClass = (path: string) =>
     `block px-4 py-2 rounded-lg font-medium transition ${
@@ -54,9 +58,27 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </div>
         </nav>
 
-        <div className="p-4 border-t space-y-1">
+        <div className="p-4 border-t space-y-3">
           <Link href="/admin/settings" className={linkClass("/admin/settings")}>⚙️ Settings</Link>
-          <div className="text-xs text-gray-400 mt-4">v0.1 • ©2026 MRossiDev </div>
+
+          {/* User Info */}
+          <div className="pt-2 border-t">
+            <div className="flex items-center gap-2 px-2 py-1 text-sm text-gray-600">
+              <User className="w-4 h-4" />
+              <span className="truncate">{user?.profile?.full_name || user?.email}</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 mt-1"
+              onClick={signOut}
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
+
+          <div className="text-xs text-gray-400">v0.1 • ©2026 MRossiDev </div>
         </div>
       </aside>
 
